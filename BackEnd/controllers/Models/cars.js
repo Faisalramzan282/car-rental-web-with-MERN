@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CarSchema = new Schema({
-    mangerID: {
+  managerId: {
       type: String,
       trim: true,
       required: true,
     },
     cars: [
       {
-        name: {
+        carName: {
           type: String,
           trim: true,
         },
@@ -17,7 +17,7 @@ const CarSchema = new Schema({
           type: String,
           trim: true,
         },
-        colour: {
+        carColor: {
           type: String,
           trim: true,
         },
@@ -26,7 +26,7 @@ const CarSchema = new Schema({
           enum: ['available', 'not available', 'reserved'],
           default: 'available',
         },
-        imageData: {
+        carImageData: {
           image: {
             type: Buffer,
             required: true,
@@ -34,7 +34,7 @@ const CarSchema = new Schema({
           extension: {
             type: String,
           },
-          fileMimeType: {
+          carImgName: {
             type: String,
           },
         },

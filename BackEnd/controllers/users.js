@@ -5,6 +5,7 @@ const app = express();
 app.set('secretKey', 'nodeRestApi');
 module.exports = {
     create:async function(req, res, next) {
+      console.log("in req.body section ===>", req.body);
         const data = {
             username: req.body.username,
             email: req.body.email,

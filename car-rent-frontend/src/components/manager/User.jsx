@@ -49,9 +49,8 @@ const User = () => {
       password: password,
       role: "user",
     };
-    await dispatch(allActions.registerUser(userData));
-    console.log("rannnnnn");
-    await dispatch(allActions.getAllUsers());
+    dispatch(allActions.registerUser(userData));
+    dispatch(allActions.getAllUsers());
   };
   const deleteUserBtn = (user) => {
     console.log("user data", user);

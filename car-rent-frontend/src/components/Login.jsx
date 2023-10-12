@@ -43,6 +43,17 @@ const Login=()=>{
         dispatch(allActions.authenticateUser(userData));
         // const state = store.getState();
         // console.log("gloals states==>", state);
+        const loggedUser = JSON.parse(localStorage.getItem('loggedUser')) || [];
+        console.log("logged user", loggedUser);
+        if(loggedUser.token && loggedUser.role==='manager')
+        {
+          console.log("manager side");
+          navigate('/home');
+        }
+        else{
+          console.log("users side");
+          navigate('/');
+        }
     }
     const signupBtn=()=>{
         navigate('/signup');

@@ -5,14 +5,14 @@ const authenticateUser = (userData) => async (dispatch) => {
   });
   try {
     const {data} = await axiosInstance.post("/authenticate", userData);
+    // console.log("data is -===>", data);
     if(data.status === 'success'){
         const userObj ={
             token: data.data.token,
-            userId : data.data.user._id
+            userId : data.data.user._id,
+            role: data.data.user.role
         }
-        const loggedUser = JSON.parse(localStorage.getItem('loggedUser')) || [];
         localStorage.setItem('loggedUser', JSON.stringify(userObj));
-        console.log("logged user", loggedUser);
         dispatch({
           type: "AUTH_SUCCESS",
           payload: data

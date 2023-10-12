@@ -17,8 +17,8 @@ const HomePage = () => {
       <div className=" min-h-screen">
         <SideBar />
       </div>
-      <div>
-        <Outlet /> {/* for child routes here */}
+      <div className="flex-1">
+        <Outlet />   {/* for child routes here */}
       </div>
         {showBodyAndFooter && (
           <div >

@@ -1,2 +1,3 @@
 /car-rent/node_modules/
-/back-end/node_modules/
+/BackEnd/node_modules/
+/BackEnd/.env

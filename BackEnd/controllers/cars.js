@@ -4,32 +4,33 @@ const userModel = require('./Models/users');
 const { Buffer } = require('buffer');
 module.exports = {
   addCar: async (req, res, next) => {
-    const { name, model, colour, availability, mangerID, imageFile, fileExtension,  fileMimeType } = req.body;
-    const imageBuffer = Buffer.from(imageFile, 'base64');
+    // console.log("req.body ===>", req.body);
+    const { managerId, carName, model, carColor, availability, carImgName,  carImageBinary, carExtension } = req.body;
+    // const imageBuffer = Buffer.from(imageFile, 'base64');
     try {
       const newCar = {
-        name,
+        carName,
         model,
-        colour,
+        carColor,
         availability,
-        imageData: {
-          image : imageBuffer,
-          extension: fileExtension,
-          fileMimeType: fileMimeType
-        },     
+        carImageData: {
+          image : carImageBinary,
+          extension: carExtension,
+          carImgName: carImgName
+        },
       };
-      let CarDetail = await carModel.findOne({ mangerID: mangerID });
-      if (!CarDetail) {
-        CarDetail = await carModel.create({ mangerID: mangerID, cars: [newCar] });
+      let manager = await carModel.findOne({ managerId : managerId });
+      if (!manager) {
+        manager = await carModel.create({ managerId: managerId, cars: [newCar] });
       }
       else {
-        CarDetail.cars.push(newCar);
-        await CarDetail.save();
+        manager.cars.push(newCar);
+        await manager.save();
       }
       res.json({
         status: "Success",
         message: "Car added successfully to manager",
-        data: CarDetail,
+        data: manager,
       });
     } catch (error) {
       res.json({
@@ -41,8 +42,9 @@ module.exports = {
     }
   },
   getCars: async (req, res) => {
-    const mangerID = req.params.mangerID; //mangerID to get only its cars
-    await carModel.findOne({ mangerID }).select('cars')
+    const managerId = req.params.mangerId; //mangerID to get only its cars
+    // console.log("manager Id is==> ", managerId);
+    await carModel.findOne({ managerId }).select('cars')
       .then((foundCar) => {
         if (!foundCar) {
           return res.status(404).json({
@@ -66,10 +68,12 @@ module.exports = {
       });
   },
   deleteCar: async (req, res) => {
-    const mangerId = req.params.mangerId;
+    const managerId = req.params.managerId;
     const carId = req.params.carId;
-    const foundManager = await carModel.findOne({ mangerID: mangerId });
+    console.log("manager and car Id ==>", managerId, carId);
+    const foundManager = await carModel.findOne({ managerId: managerId });
     if (foundManager) {
+      console.log("manager found ")
       const foundCar = foundManager.cars.findIndex((car) => car._id.toString() === carId);
       foundManager.cars.splice(foundCar, 1); //remove object from cars array
       await foundManager.save();
@@ -87,18 +91,19 @@ module.exports = {
     }
   },
   updateCar: async (req, res) => {
-    const mangerId = req.params.mangerId;
+    const managerId = req.params.managerId;
     const carId = req.body._id //cars id 
     const carObj = {
-      name: req.body.name,
+      carName: req.body.carName,
       model: req.body.model,
-      colour: req.body.colour,
+      carColor: req.body.carColor,
       availability: req.body.availability
     }
+    console.log("car Obj ", carObj);
     try {
       const updatedCar = await carModel.findOneAndUpdate(
         {
-          mangerID: mangerId,
+          managerID: managerId,
           'cars._id': carId
         },
         {
@@ -165,7 +170,7 @@ module.exports = {
       res.json({ status: 404, msg: "Failed", data: "No Reservation" })
     }
   },
-  usersReserveCar: async (req, res) => {
+usersReserveCar: async (req, res) => {
     try {
       const userIdArray = [];
       const userIdObjs = await reserveModel.find({}, 'userId');
